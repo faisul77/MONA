@@ -13,12 +13,13 @@
 #define MONA_DEBUG 0 //1 on;0 off
 
 #define MotorEnable 7 //1 on;0 off
-
-#define MotorLeftDir 3 //1 fw;0 bw
-#define MotorRightDir 4 //1 fw;0 bw
-
-#define MotorLeftSpeed 5 //0-255
-#define MotorRightSpeed 6 //0-255
+//MONA motor configuration
+//A PWM has to be set on the A or B
+//pins for each motor, depending the direction wanted
+#define MotorLeftA 3 //A+!B->FW
+#define MotorLeftB 5 //!A+B->BW
+#define MotorRightA 4 //A+!B->FW
+#define MotorRightB 6 //!A+B->BW
 
 #define TopLED 8
 #define BottomLED 13
