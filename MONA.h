@@ -8,31 +8,31 @@
 #endif
 #include "Wire.h"
 
-#include "wire.h"
 
 //activate debugging mode
 #define MONA_DEBUG 0 //1 on;0 off
 
-#define MotorEnable 7 //1 on;0 off
+#define motorEnable 7 //1 on;0 off
 //MONA motor configuration
 //A PWM has to be set on the A or B
 //pins for each motor, depending the direction wanted
-#define MotorLeftA 3 //A+!B->FW
-#define MotorLeftB 5 //!A+B->BW
-#define MotorRightA 4 //A+!B->FW
-#define MotorRightB 6 //!A+B->BW
+#define motorLeftA 3 //A+!B->FW
+#define motorLeftB 5 //!A+B->BW
+#define motorRightA 4 //A+!B->FW
+#define motorRightB 6 //!A+B->BW
 #define FW 1
 #define BW 0
-#define TopLED 8
-#define BottomLED 13
 
-#define EncoderRight 9
-#define EncoderLeft 10
+#define topLED 8
+#define bottomLED 13
 
-#define ProxEnable 2 //1 on;0 off
-#define ProxFront A2
-#define ProxFRight A1
-#define ProxFLeft A3
+#define encoderRight 9
+#define encoderLeft 10
+
+#define proxEnable 2 //1 on;0 off
+#define proxFront A2
+#define proxFRight A1
+#define proxFLeft A3
 
 
 class MONA{
@@ -44,9 +44,12 @@ public:
   int16_t readFRSensor(void); //retrieve the Front Right distance sensor
   int16_t readFMSensor(void); //retrieve the Front distance sensor
   int16_t readFLSensor(void); //retrieve the Front Left distance sensor
+  void readAllSensors(int16_t *proxSensors); //retrreive all the proximity sensor data in one pointer
 
-  void SetRMotorPWM(uint8_t pwm = 0,boolean dir = FW); //Set Right motor speed and direction
-  void SetLMotorPWM(uint8_t pwm = 0,boolean dir = BW); //Set Left motor speed and direction
+
+  void initMotors(void);//configure the pins of the motors as ouputs
+  void setRMotorPWM(uint8_t pwm = 0,boolean dir = FW); //Set Right motor speed and direction
+  void setLMotorPWM(uint8_t pwm = 0,boolean dir = BW); //Set Left motor speed and direction
 
   void beginEncoders(void); //begin the encoder pulling routine
   void stopEncoders(void); //stop the encoder pulling routine
@@ -58,4 +61,6 @@ public:
   void resetLEncoder(void); //reset the tick count for the left encoder
   void resetEcoders(void); //reset both encoders' tick counts
 
-}
+};
+
+#endif //  MONA_H
