@@ -6,7 +6,7 @@
 #else
  #include "WProgram.h"
 #endif
-#include "Wire.h"
+#include "TimerOne.h"
 
 
 //activate debugging mode
@@ -26,13 +26,15 @@
 #define topLED 8
 #define bottomLED 13
 
-#define encoderRight 9
+#define intPeriod 100 //default frequency at 100 ms
+#define encoderRight 9 //encoder digital inouts
 #define encoderLeft 10
 
 #define proxEnable 2 //1 on;0 off
 #define proxFront A2
 #define proxFRight A1
 #define proxFLeft A3
+
 
 
 class MONA{
@@ -49,18 +51,17 @@ public:
 
   void initMotors(void);//configure the pins of the motors as ouputs
   void setRMotorPWM(uint8_t pwm = 0,boolean dir = FW); //Set Right motor speed and direction
-  void setLMotorPWM(uint8_t pwm = 0,boolean dir = BW); //Set Left motor speed and direction
+  void setLMotorPWM(uint8_t pwm = 0,boolean dir = FW); //Set Left motor speed and direction
 
-  void beginEncoders(void); //begin the encoder pulling routine
+  //encoders use the Timer 1
+  void initEncoders(uint32_t period = intPeriod); //begin the encoder pulling routine
   void stopEncoders(void); //stop the encoder pulling routine
-  boolean readREconder(void); //read the value of the right encoder
-  boolean readLEncoder(void); //read the value of the left EncoderLeft
-  int32_t rightETicks(void); //read the number of total ticks on the right encoder
-  int32_t leftETicks(void); //read the number of total ticks on the left encoder
+  int32_t readREncoder(void); //read the value of the right encoder
+  int32_t readLEncoder(void); //read the value of the left EncoderLeft
   void resetREncoder(void); //reset the tick cound for the right encoder
   void resetLEncoder(void); //reset the tick count for the left encoder
   void resetEcoders(void); //reset both encoders' tick counts
-
+  void readEncoders(int32_t *encoders); //read both encoders 
 };
 
 #endif //  MONA_H

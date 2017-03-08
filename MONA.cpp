@@ -7,6 +7,20 @@
  ****************************************************/
 #include "MONA.h"
 
+//variables to store the encoder ticks
+volatile long encoderRTicks = 0;
+volatile long encoderLTicks = 0;
+//variable to read the encoder
+volatile boolean encoderR = 0;
+volatile boolean encoderL = 0;
+volatile boolean encoderROld = 0;
+volatile boolean encoderLOld = 0;
+
+//variables to store the direction of the motors
+volatile boolean dirR = 0;
+volatile boolean dirL = 0;
+
+
 MONA::MONA(){
 }
 
@@ -28,9 +42,11 @@ void MONA::initMotors(void){
 }
 
 void MONA::setRMotorPWM(uint8_t pwm,boolean dir){
+  dirR = dir;
   if(dir>0){
-    digitalWrite(motorRightB,0);
-    analogWrite(motorRightA,pwm);
+    pwm = abs(pwm - 255);
+    analogWrite(motorRightB,pwm);
+    digitalWrite(motorRightA,1);
   }
   else{
     digitalWrite(motorRightA,0);
@@ -39,6 +55,7 @@ void MONA::setRMotorPWM(uint8_t pwm,boolean dir){
 }
 
 void MONA::setLMotorPWM(uint8_t pwm,boolean dir){
+  dirL = dir;
   if(dir>0){
     digitalWrite(motorLeftB,0);
     analogWrite(motorLeftA,pwm);
@@ -80,3 +97,78 @@ void MONA::readAllSensors(int16_t *proxSensors){
   proxSensors[2] = analogRead(proxFLeft);
 
 }
+
+//read the encoder value
+//TODO: try to make it shorter and more efficient
+void getETicks(void){
+  //read the encoders and store the values
+  encoderR = digitalRead(encoderRight);
+  encoderL = digitalRead(encoderLeft);
+  //compare to see if the value changed from the last interrupt
+  if(encoderR != encoderROld){
+    if(dirR == FW)
+      encoderRTicks = encoderRTicks + 1;
+    else
+      encoderRTicks = encoderRTicks - 1;
+    }
+  if(encoderL != encoderLOld){
+    if(dirL == FW)
+      encoderLTicks = encoderLTicks + 1;
+    else
+      encoderLTicks = encoderLTicks - 1;
+    }
+  //store the value of the encoders for future reference
+  encoderROld = encoderR;
+  encoderLOld = encoderL;
+}
+
+void MONA::initEncoders(uint32_t period){ //begin the encoder pulling routine wi the period in ms
+  //set the encoder pins to inputs
+  pinMode(encoderRight,INPUT);
+  pinMode(encoderLeft,INPUT);
+  //set the period for the timer interrupt
+  period = period * 1000;
+  Timer1.initialize(period);//value in ms
+  //attach the interrupt to the getTicks function
+  Timer1.attachInterrupt(getETicks);
+}
+
+int32_t MONA::readREncoder(void){ //read the value of the right encoder
+  noInterrupts();
+  long value = encoderRTicks;
+  interrupts();
+  return value;
+}
+
+
+int32_t MONA::readLEncoder(void){ //read the value of the right encoder
+  noInterrupts();
+  long value = encoderLTicks;
+  interrupts();
+  return value;
+}
+
+void readEncoders(int32_t *encoders){//return both encoder values as a pointer
+  noInterrupts();
+  encoders[0] = encoderRTicks;
+  encoders[1] = encoderLTicks;
+  interrupts();
+}
+
+void resetREncoder(void){ //reset the tick cound for the right encoder
+  noInterrupts();
+  encoderRTicks = 0;
+  interrupts();
+}
+
+void resetLEncoder(void){ //reset the tick cound for the right encoder
+  noInterrupts();
+  encoderLTicks = 0;
+  interrupts();
+}
+  void resetEcoders(void){ //reset both ecoders
+    noInterrupts();
+    encoderLTicks = 0;
+    encoderRTicks = 0;
+    interrupts();
+  }
