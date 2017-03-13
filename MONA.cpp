@@ -2,7 +2,7 @@
   This is a library for the MONA educational mobile robot
   Designed specifically to work with the MONA platform
   ----> http://www.mona.uk
-  Written by Jose Espinosa/Farshad Arvid for The University of Manchester.
+  Written by Jose Espinosa/Farshad Arvin for The University of Manchester.
   TODO:ADDlicense
  ****************************************************/
 #include "MONA.h"
@@ -166,7 +166,8 @@ void resetLEncoder(void){ //reset the tick cound for the right encoder
   encoderLTicks = 0;
   interrupts();
 }
-  void resetEcoders(void){ //reset both ecoders
+
+void resetEcoders(void){ //reset both ecoders
     noInterrupts();
     encoderLTicks = 0;
     encoderRTicks = 0;
