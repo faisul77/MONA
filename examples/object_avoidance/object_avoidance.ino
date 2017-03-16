@@ -4,7 +4,7 @@
 MONA mona;
 
 //make an array to store the proximity sensor data
-uint16_t proxData[3];
+int16_t proxData[3];
 
 void setup() {
   // put your setup code here, to run once:

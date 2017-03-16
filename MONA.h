@@ -60,7 +60,7 @@ public:
   int32_t readLEncoder(void); //read the value of the left EncoderLeft
   void resetREncoder(void); //reset the tick cound for the right encoder
   void resetLEncoder(void); //reset the tick count for the left encoder
-  void resetEcoders(void); //reset both encoders' tick counts
+  void resetEncoders(void); //reset both encoders' tick counts
   void readEncoders(int32_t *encoders); //read both encoders 
 };
 

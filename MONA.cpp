@@ -105,13 +105,13 @@ void getETicks(void){
   encoderR = digitalRead(encoderRight);
   encoderL = digitalRead(encoderLeft);
   //compare to see if the value changed from the last interrupt
-  if(encoderR != encoderROld){
+  if((encoderR != encoderROld) && (encoderR == 1)){
     if(dirR == FW)
       encoderRTicks = encoderRTicks + 1;
     else
       encoderRTicks = encoderRTicks - 1;
     }
-  if(encoderL != encoderLOld){
+  if((encoderL != encoderLOld) && (encoderL == 1)){
     if(dirL == FW)
       encoderLTicks = encoderLTicks + 1;
     else
@@ -148,26 +148,26 @@ int32_t MONA::readLEncoder(void){ //read the value of the right encoder
   return value;
 }
 
-void readEncoders(int32_t *encoders){//return both encoder values as a pointer
+void MONA::readEncoders(int32_t *encoders){//return both encoder values as a pointer
   noInterrupts();
   encoders[0] = encoderRTicks;
   encoders[1] = encoderLTicks;
   interrupts();
 }
 
-void resetREncoder(void){ //reset the tick cound for the right encoder
+void MONA::resetREncoder(void){ //reset the tick cound for the right encoder
   noInterrupts();
   encoderRTicks = 0;
   interrupts();
 }
 
-void resetLEncoder(void){ //reset the tick cound for the right encoder
+void MONA::resetLEncoder(void){ //reset the tick cound for the right encoder
   noInterrupts();
   encoderLTicks = 0;
   interrupts();
 }
 
-void resetEcoders(void){ //reset both ecoders
+void MONA::resetEncoders(void){ //reset both ecoders
     noInterrupts();
     encoderLTicks = 0;
     encoderRTicks = 0;
